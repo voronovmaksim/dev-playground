@@ -1,0 +1,40 @@
+---
+
+- name: Install buisness apps from Deb
+  apt:
+    deb: "{{item}}"
+    update_cache: yes
+  loop:
+    - https://go.skype.com/skypeforlinux-64.deb  
+
+  # [TODO] IT WAS NOT TESTED------------------------------------------------------------------------------------------------------------
+
+  # RUN RDP: xfreerdp /multimon /sound /microphone /clipboard -themes -wallpaper /u:<userName> /v:<name of comp>
+- name: Install buisness apps from repos
+  apt:
+    name: "{{item}}"
+  loop: 
+   - freerdp2-x11  
+  
+   # -----------------------------------------------------------------------------------------------------------------------------  
+
+#- name: Install Prerequisites for Cisco
+#  apt:
+#    pkg:
+#    - lib32z1
+
+- name: Download Cisco
+  get_url:
+    url: http://dl1.technet24.ir/Downloads/Software/Cisco/AnyConnect/anyconnect-linux64-4.8.03052-predeploy-k9.tar.gz
+    dest: /home/yasuro/Downloads/
+
+- name: Unarchive Cisco  
+  unarchive:
+    src: /home/yasuro/Downloads/anyconnect-linux64-4.8.03052-predeploy-k9.tar.gz
+    dest: /home/yasuro/Downloads/
+
+- name: install Cisco
+  shell: 
+    chdir: /home/yasuro/Downloads/anyconnect-linux64-4.8.03052/vpn/
+    cmd: yes | ./vpn_install.sh
+

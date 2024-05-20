@@ -1,0 +1,58 @@
+---
+# tasks file for setting_localhost
+
+- name: Set hotkey for Flameshot
+  shell: "{{item}}"
+  loop:
+     - gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot '[]'
+     - gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+     - gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name 'flameshot'
+     - gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command '/usr/bin/flameshot gui'
+     - gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ binding 'Print'
+
+#switch-to-workspace was not tested. 
+#In order to switch vicrtual desktop using page_UP and page_down. Otherwise idea will not allow to use hotkey cntrl+alt+right/lefet arrow
+- name: Change default hotKey
+  dconf:
+    key: "{{item.key}}"
+    value: "{{item.value}}"
+  loop:
+    - {key: "/org/gnome/desktop/wm/keybindings/switch-input-source", value: "['<Alt>Shift_L', '<Shift>Alt_L']"} 
+    - {key: "/org/gnome/desktop/wm/keybindings/panel-run-dialog", value: "['<Alt>space']"}
+    - {key: "/org/gnome/desktop/wm/keybindings/switch-to-workspace-right", value: "['<Control><Alt>Page_Down']"}
+    - {key: "/org/gnome/desktop/wm/keybindings/switch-to-workspace-left", value: "['<Control><Alt>Page_Up']"}  
+
+# [TODO] Add all operation of copy to one loop
+- name: Add Applications to autoRun
+  copy: src={{item}} dest=/home/yasuro/.config/autostart
+  loop: 
+     - flameshot.desktop
+     - com.github.hluk.copyq.desktop
+      
+
+- name: Delete unnesessary icons applications in menu 
+  shell: rm -r /usr/share/applications/{{item}}
+  register: outpt
+  loop: 
+    - software-properties-drivers.desktop
+    - org.gnome.Calendar.desktop
+    - im-config.desktop
+    - software-properties-livepatch.desktop
+    - magnus.desktop
+  failed_when: outpt.rc != 1 and outpt.rc != 0  
+
+- name: Delete unnesessary icons budgie-desktop in menu
+  shell: rm /usr/share/budgie-desktop/applications/* 
+  register: outpt
+  failed_when: outpt.rc != 1 and outpt.rc != 0  
+
+- name: Copy BackUp layout of Budgie menu 
+  copy: src=budgie-backUp dest=/home/yasuro/Downloads/
+
+- name: Restore layout of Budgie menu from backUp 
+  shell: dconf load /com/solus-project/ < /home/yasuro/Downloads/budgie-backUp
+
+# [TODO] IT WAS NOT TESTED------------------------------------------------------------------------------------------------------------
+- name: Config inputrc
+  copy: src=.inputrc dest=~
+# ---------------------------------------------------------

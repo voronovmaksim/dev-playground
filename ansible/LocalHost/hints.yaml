@@ -1,0 +1,4 @@
+---
+    docks:
+       roles: https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html
+       run_playBook_with_sudo_pass: ansible-playbook playbook.yaml --extra-vars "ansible_sudo_pass=Password"

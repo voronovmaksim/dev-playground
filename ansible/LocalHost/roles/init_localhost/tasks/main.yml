@@ -1,0 +1,32 @@
+--- 
+#Tasks file for init_localhost
+
+- name: Install Git
+  apt:
+    name: git
+
+- name: Install Google Chrome
+  shell: $COMMANDS
+  register: outpt
+  environment:
+    COMMANDS: "{{ item }}"
+  loop:
+     - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+     - sudo dpkg -i --force-depends google-chrome-stable_current_amd64.deb
+     
+- name: Install Visual Stuido Code
+  apt:
+    deb: https://go.microsoft.com/fwlink/?LinkID=760868  
+
+- name: Install dConf-editor
+  apt:
+    name: dconf-editor
+
+- name: Install CopyQ
+  apt:
+    name: copyq
+
+- name: Install Flameshot    
+  apt:
+    name: flameshot
+

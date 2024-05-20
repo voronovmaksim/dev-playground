@@ -1,0 +1,22 @@
+---
+- name: install neseccary soft
+  hosts: all
+  #become_user: yasuro
+  become: yes
+
+
+  roles:
+        #Запускать под root
+   #- init_localhost
+        #Запускать под yasuro
+   #- setting_localhost
+        #Запускать под root
+   #- business_app
+   
+   #TODO wget https://download.jetbrains.com/idea/ideaIC-2020.2.3.tar.gz?_ga=2.19711678.764716526.1604067168-1236493156.1604067168
+
+#sudo apt-get install gnome-tweak-tool
+#gsettings set org.gnome.nautilus.preferences executable-text-activation 'launch'
+#sudo apt install gnome-shell-extension-autohidetopbar
+#sudo apt install default-jre
+#sudo apt install default-jdk
